@@ -1,5 +1,6 @@
 import os
 import threading
+import asyncio
 import telegram
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
@@ -37,13 +38,18 @@ def run_bot():
     print("Starting bot...")
     if not BOT_TOKEN:
         raise ValueError("The BOT_TOKEN environment variable is not set. Please set it before running the bot.")
+
+    # Manually create a new event loop for this thread
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     
     application = Application.builder().token(BOT_TOKEN).build()
     application.add_handler(CommandHandler("start", start_command))
     application.add_handler(MessageHandler(filters.VIDEO, handle_video))
     
     print("Bot is running...")
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    # The run_polling method needs to be run in the new event loop
+    loop.run_until_complete(application.run_polling(allowed_updates=Update.ALL_TYPES))
 
 if __name__ == "__main__":
     app = Flask(__name__)
