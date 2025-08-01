@@ -30,7 +30,7 @@ async def handle_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
     file_id = update.message.video.file_id
     
     # Create the deep link with the file_id
-    deep_link = f"https://t.me/{BOT_USERNAME}?start={file_id}"
+    deep_link = f"https://t.me/{Supplybot}?start={file_id}"
     
     # Reply to the sender with the file_id and the deep link
     response_text = (
