@@ -8,7 +8,7 @@ from flask import Flask
 # Retrieve the bot API token from an environment variable for security
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 # Replace with your bot's username
-BOT_USERNAME = "Supplybot"
+BOT_USERNAME = "Suppllyubot"
 
 # Function to handle the /start command from a user
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
