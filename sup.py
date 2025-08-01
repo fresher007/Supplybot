@@ -1,6 +1,5 @@
 import os
 import threading
-import asyncio
 import telegram
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
@@ -33,33 +32,35 @@ async def handle_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     await update.message.reply_text(response_text)
 
-# Main function to set up and run the bot
-def run_bot():
-    print("Starting bot...")
-    if not BOT_TOKEN:
-        raise ValueError("The BOT_TOKEN environment variable is not set. Please set it before running the bot.")
-
-    # Manually create a new event loop for this thread
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    
-    application = Application.builder().token(BOT_TOKEN).build()
-    application.add_handler(CommandHandler("start", start_command))
-    application.add_handler(MessageHandler(filters.VIDEO, handle_video))
-    
-    print("Bot is running...")
-    # The run_polling method needs to be run in the new event loop
-    loop.run_until_complete(application.run_polling(allowed_updates=Update.ALL_TYPES))
-
-if __name__ == "__main__":
+# Flask server to run in a background thread
+def run_flask_server():
     app = Flask(__name__)
 
     @app.route("/")
     def index():
         return "Bot is running!"
 
-    bot_thread = threading.Thread(target=run_bot)
-    bot_thread.start()
-
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
+# Main function to set up and run the bot
+if __name__ == "__main__":
+    print("Starting bot...")
+
+    if not BOT_TOKEN:
+        raise ValueError("The BOT_TOKEN environment variable is not set. Please set it before running the bot.")
+
+    # Start the Flask server in a separate thread
+    flask_thread = threading.Thread(target=run_flask_server)
+    flask_thread.start()
+
+    # Create the Application and pass your bot's token.
+    application = Application.builder().token(BOT_TOKEN).build()
+    
+    # Register the handlers
+    application.add_handler(CommandHandler("start", start_command))
+    application.add_handler(MessageHandler(filters.VIDEO, handle_video))
+    
+    # Start the bot's polling loop in the main thread
+    print("Bot is running...")
+    application.run_polling(allowed_updates=Update.ALL_TYPES)
