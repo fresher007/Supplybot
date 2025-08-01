@@ -6,7 +6,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 # Retrieve the bot API token from an environment variable for security
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 # Replace with your bot's username
-BOT_USERNAME = "YourBotUsername"
+BOT_USERNAME = "Supplybot"
 
 # Function to handle the /start command from a user
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -30,7 +30,7 @@ async def handle_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
     file_id = update.message.video.file_id
     
     # Create the deep link with the file_id
-    deep_link = f"https://t.me/{Supplybot}?start={file_id}"
+    deep_link = f"https://t.me/{BOT_USERNAME}?start={file_id}"
     
     # Reply to the sender with the file_id and the deep link
     response_text = (
