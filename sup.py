@@ -4,6 +4,9 @@ import telegram
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from flask import Flask
+import logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
 
 # Retrieve the bot API token from an environment variable for security
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
